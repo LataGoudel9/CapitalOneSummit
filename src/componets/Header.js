@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -10,11 +11,15 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import { withStyles } from '@material-ui/core/styles';
+import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import HistoryIcon from '@material-ui/icons/History';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
+import Button from '@material-ui/core/Button';
+import Album from './Album';
+
 
 const styles = theme => ({
   root: {
@@ -86,11 +91,24 @@ const styles = theme => ({
   },
 });
 
-class PrimarySearchAppBar extends React.Component {
-  state = {
+
+class Header extends React.Component {
+constructor(){
+  super();
+  this.state = {
     anchorEl: null,
     mobileMoreAnchorEl: null,
+    startInput:"",
+    fav: 0,
   };
+}
+
+updateSearch(event){
+  console.log(this.fav)
+  console.log(event.target.value)
+  this.setState({startInput:event.target.value })
+  console.log(this.startInput)
+}
 
   handleProfileMenuOpen = event => {
     this.setState({ anchorEl: event.currentTarget });
@@ -109,7 +127,32 @@ class PrimarySearchAppBar extends React.Component {
     this.setState({ mobileMoreAnchorEl: null });
   };
 
+  //seacrh functionyellow
+//  var input;
+
+
   render() {
+    console.log(this.startInput)
+    //var input;
+    function search() {
+    //input = this.startInput;
+    // console.log(input);
+     alert("THIS FUNCTION IS BEING CALLED!");
+     var searchString = "https://images-api.nasa.gov/search?q=apollo%2011";
+     axios.get(searchString)
+     .catch((error) =>{
+       console.log("Try Another Search")
+     })
+     .then((res => {
+     var data = res.data;
+     console.log("THIS RAN SUCCESSFULLY");
+     console.log(data);
+     }))
+   }
+    //document.write({input});
+    //var input;
+
+    const t = "hi";
     const { anchorEl, mobileMoreAnchorEl } = this.state;
     const { classes } = this.props;
     const isMenuOpen = Boolean(anchorEl);
@@ -136,6 +179,7 @@ class PrimarySearchAppBar extends React.Component {
         open={isMobileMenuOpen}
         onClose={this.handleMenuClose}
       >
+
         <MenuItem onClick={this.handleMobileMenuClose}>
           <IconButton color="inherit">
             <Badge badgeContent={4} color="secondary">
@@ -165,8 +209,6 @@ class PrimarySearchAppBar extends React.Component {
       <div className={classes.root}>
         <AppBar position="static">
           <Toolbar>
-            <IconButton className={classes.menuButton} color="inherit" aria-label="Open drawer">
-            </IconButton>
             <Typography className={classes.title} variant="h6" color="inherit" noWrap>
               NASA
             </Typography>
@@ -175,41 +217,46 @@ class PrimarySearchAppBar extends React.Component {
                 <SearchIcon />
               </div>
               <InputBase
+                type = 'text'
                 placeholder="Search…"
                 classes={{
                   root: classes.inputRoot,
                   input: classes.inputInput,
                 }}
+                id = "str"
+                value = {this.state.startInput}
+                onChange={this.updateSearch.bind(this)}
               />
             </div>
+            <Button size="small" color="dnOXL9ARn8KJQfo" onClick={search}>
+            <SearchIcon/>
+            </Button>
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
               <IconButton color="inherit">
-                <Badge badgeContent={4} color="secondary">
+                <Badge badgeContent={1} color="secondary">
                   <FavoriteIcon />
                 </Badge>
               </IconButton>
               <IconButton color="inherit">
-                <Badge badgeContent={17} color="secondary">
+                <Badge badgeContent={0} color="secondary">
                   <NotificationsIcon />
                 </Badge>
               </IconButton>
               <IconButton
-                aria-owns={isMenuOpen ? 'material-appbar' : undefined}
-                aria-haspopup="true"
-                onClick={this.handleProfileMenuOpen}
                 color="inherit"
               >
                 <HistoryIcon/>
               </IconButton>
             </div>
             <div className={classes.sectionMobile}>
-              <IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit">
+              <IconButton color="inherit">
                 <MoreIcon />
               </IconButton>
             </div>
           </Toolbar>
         </AppBar>
+        <Album said ={this.startInput} />
         {renderMenu}
         {renderMobileMenu}
       </div>
@@ -217,8 +264,8 @@ class PrimarySearchAppBar extends React.Component {
   }
 }
 
-PrimarySearchAppBar.propTypes = {
+Header.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(PrimarySearchAppBar);
+export default withStyles(styles)(Header);

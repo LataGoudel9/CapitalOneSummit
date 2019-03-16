@@ -13,7 +13,27 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
+import FavoriteIcon from '@material-ui/icons/Favorite';
 
+//button worker
+//import Buttons from '.Buttons';
+//entire button class
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Slide from '@material-ui/core/Slide';
+//ads extra information Button
+import Buttons from './Buttons';
+//import Header from './Header';
+
+
+class FavButton extends React.Component{
+  state = {
+    favorited: false,
+  };
+}
 
 const styles = theme => ({
   appBar: {
@@ -45,6 +65,7 @@ const styles = theme => ({
     padding: `${theme.spacing.unit * 8}px 0`,
   },
   card: {
+    raised: true,
     height: '100%',
     display: 'flex',
     flexDirection: 'column',
@@ -63,11 +84,19 @@ const styles = theme => ({
 //make an array based off how many cards there needs to be
 const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
-function Album(props) {
-  const { classes } = props;
+
+class Album extends React.Component {
+ render(){
+   const {classes} = this.props;
+   let name = this.props.said
+ //document.write(this.props.said);
+  console.log(name);
+
 
   return (
+
     <React.Fragment>
+    <p> {name}</p>
       <CssBaseline />
       <AppBar position="static" className={classes.appBar}>
       </AppBar>
@@ -82,7 +111,7 @@ function Album(props) {
               Enjoy Searching a rich, vivid library of images stright from NASA's control center and the Opportunity rover's Martian photos to Hubble Space Telescope images of distant galaxies, these galleries show our universe with depth and clarity beyond what previous generations could imagine.
             </Typography>
             <div className={classes.heroButtons}>
-              
+
             </div>
           </div>
         </div>
@@ -106,11 +135,10 @@ function Album(props) {
                     </Typography>
                   </CardContent>
                   <CardActions>
-                    <Button size="small" color="primary">
-                      View
-                    </Button>
-                    <Button size="small" color="primary">
-                    <FavoriteBorderIcon />
+                  //this is a button which will have more infor
+                    <Buttons/>
+                    <Button size="small" color="primary" onClick={FavoriteIcon}>
+                    <FavoriteBorderIcon/>
                     </Button>
                   </CardActions>
                 </Card>
@@ -121,6 +149,7 @@ function Album(props) {
       </main>
     </React.Fragment>
   );
+}
 }
 
 Album.propTypes = {
