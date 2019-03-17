@@ -28,7 +28,7 @@ class Buttons extends React.Component {
     return (
       <div>
         <Button variant="outlined" color="primary" onClick={this.handleClickOpen}>
-          Slide in alert dialog
+          View
         </Button>
         <Dialog
           open={this.state.open}

@@ -19,6 +19,7 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import Button from '@material-ui/core/Button';
 import Album from './Album';
+import Tempdrawer from './Tempdrawer';
 
 
 const styles = theme => ({
@@ -93,21 +94,20 @@ const styles = theme => ({
 
 
 class Header extends React.Component {
-constructor(){
-  super();
-  this.state = {
-    anchorEl: null,
-    mobileMoreAnchorEl: null,
-    startInput:"",
-    fav: 0,
-  };
-}
 
-updateSearch(event){
-  console.log(this.fav)
-  console.log(event.target.value)
+  constructor(props){
+   super(props);
+   this.state = {anchorEl: null,
+   mobileMoreAnchorEl: null,
+   startInput:null,
+   jsonData: []};
+ }
+
+updateSearch = event =>{
+//  console.log(this.state.startInput)
+//  console.log(event.target.value)
   this.setState({startInput:event.target.value })
-  console.log(this.startInput)
+//  console.log(this.state.startInput)
 }
 
   handleProfileMenuOpen = event => {
@@ -126,29 +126,28 @@ updateSearch(event){
   handleMobileMenuClose = () => {
     this.setState({ mobileMoreAnchorEl: null });
   };
+  search=()=> {
+   alert("THIS FUNCTION IS BEING CALLED!");
+   var searchString = "https://images-api.nasa.gov/search?q=apollo%2011";
+   axios.get(searchString)
+   .catch((error) =>{
+     console.log("Try Another Search")
+   })
+   .then((res => {
+   var data = res.data;
+   this.setState({jsonData:data})
+   console.log("THIS RAN SUCCESSFULLY");
+   console.log(data);
+   }))
+ }
 
   //seacrh functionyellow
 //  var input;
 
 
   render() {
-    console.log(this.startInput)
+    //console.log(this.state.startInput)
     //var input;
-    function search() {
-    //input = this.startInput;
-    // console.log(input);
-     alert("THIS FUNCTION IS BEING CALLED!");
-     var searchString = "https://images-api.nasa.gov/search?q=apollo%2011";
-     axios.get(searchString)
-     .catch((error) =>{
-       console.log("Try Another Search")
-     })
-     .then((res => {
-     var data = res.data;
-     console.log("THIS RAN SUCCESSFULLY");
-     console.log(data);
-     }))
-   }
     //document.write({input});
     //var input;
 
@@ -228,16 +227,13 @@ updateSearch(event){
                 onChange={this.updateSearch.bind(this)}
               />
             </div>
-            <Button size="small" color="dnOXL9ARn8KJQfo" onClick={search}>
+            <Button size="small" color="dnOXL9ARn8KJQfo" onClick={this.search}>
             <SearchIcon/>
             </Button>
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
-              <IconButton color="inherit">
-                <Badge badgeContent={1} color="secondary">
-                  <FavoriteIcon />
-                </Badge>
-              </IconButton>
+            <Tempdrawer/>
+
               <IconButton color="inherit">
                 <Badge badgeContent={0} color="secondary">
                   <NotificationsIcon />
@@ -256,7 +252,7 @@ updateSearch(event){
             </div>
           </Toolbar>
         </AppBar>
-        <Album said ={this.startInput} />
+        <Album said ={this.state.startInput} jdata = {this.state.jsonData} />
         {renderMenu}
         {renderMobileMenu}
       </div>

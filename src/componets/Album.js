@@ -88,15 +88,15 @@ const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 class Album extends React.Component {
  render(){
    const {classes} = this.props;
-   let name = this.props.said
+   let searched = this.props.said
  //document.write(this.props.said);
-  console.log(name);
+  console.log(this.props.jdata);
 
 
   return (
 
     <React.Fragment>
-    <p> {name}</p>
+    <p> {searched}</p>
       <CssBaseline />
       <AppBar position="static" className={classes.appBar}>
       </AppBar>
