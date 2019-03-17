@@ -104,10 +104,7 @@ class Header extends React.Component {
  }
 
 updateSearch = event =>{
-//  console.log(this.state.startInput)
-//  console.log(event.target.value)
   this.setState({startInput:event.target.value })
-//  console.log(this.state.startInput)
 }
 
   handleProfileMenuOpen = event => {
@@ -128,13 +125,13 @@ updateSearch = event =>{
   };
   search=()=> {
    alert("THIS FUNCTION IS BEING CALLED!");
-   var searchString = "https://images-api.nasa.gov/search?q=apollo%2011";
+   var searchString = "https://images-api.nasa.gov/search?q="+this.state.startInput;
    axios.get(searchString)
    .catch((error) =>{
      console.log("Try Another Search")
    })
    .then((res => {
-   var data = res.data;
+   var data = res.data.collection.items;
    this.setState({jsonData:data})
    console.log("THIS RAN SUCCESSFULLY");
    console.log(data);
@@ -233,7 +230,6 @@ updateSearch = event =>{
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
             <Tempdrawer/>
-
               <IconButton color="inherit">
                 <Badge badgeContent={0} color="secondary">
                   <NotificationsIcon />
