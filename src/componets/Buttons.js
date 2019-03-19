@@ -39,11 +39,11 @@ class Buttons extends React.Component {
           aria-describedby="alert-dialog-slide-description"
         >
           <DialogTitle id="alert-dialog-slide-title">
-            {"Use Google's location service?"}
+          {this.props.dataID !== undefined ? this.props.titleID : ""}          
           </DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-slide-description">
-              {this.props.dataID != undefined ? this.props.dataID : ""}
+              {this.props.dataID !== undefined ? this.props.dataID : ""}
             </DialogContentText>
           </DialogContent>
           <DialogActions>

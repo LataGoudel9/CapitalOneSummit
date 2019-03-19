@@ -10,8 +10,6 @@ import Badge from '@material-ui/core/Badge';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import { fade } from '@material-ui/core/styles/colorManipulator';
-import { withStyles } from '@material-ui/core/styles';
-import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import HistoryIcon from '@material-ui/icons/History';
 import FavoriteIcon from '@material-ui/icons/Favorite';
@@ -20,11 +18,50 @@ import MoreIcon from '@material-ui/icons/MoreVert';
 import Button from '@material-ui/core/Button';
 import Album from './Album';
 import Tempdrawer from './Tempdrawer';
+import colors from '@material-ui/core/colors';
+import Historytab from './Historytab';
+
+import Paper from '@material-ui/core/Paper';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+
+import { withStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+
+import Dates from './Dates'
+import Input from '@material-ui/core/Input';
+import OutlinedInput from '@material-ui/core/OutlinedInput';
+import FilledInput from '@material-ui/core/FilledInput';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
 
 
 const styles = theme => ({
+  root2: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  formControl: {
+    margin: theme.spacing.unit,
+    minWidth: 120,
+  },
+  selectEmpty: {
+    marginTop: theme.spacing.unit * 2,
+  },
+  container: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  textField: {
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+    width: 200,
+  },
   root: {
     width: '100%',
+    flexGrow: 1,
   },
   grow: {
     flexGrow: 1,
@@ -90,18 +127,57 @@ const styles = theme => ({
       display: 'none',
     },
   },
+  root2: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  formControl: {
+    margin: theme.spacing.unit,
+    minWidth: 120,
+  },
+  selectEmpty: {
+    marginTop: theme.spacing.unit * 2,
+  },
 });
-
-
 class Header extends React.Component {
 
   constructor(props){
    super(props);
-   this.state = {anchorEl: null,
+   this.state = {
+   anchorEl: null,
    mobileMoreAnchorEl: null,
    startInput:null,
-   jsonData: []};
+   value: 0,
+   jsonData: [],
+   startYear : "1920",
+   endYear: "2019`"
+
+ };
  }
+ state = {
+
+ };
+ handleChange1 = event => {
+   this.setState({ [event.target.name]: event.target.value });
+   //console.log(event.target.value)
+   var num = event.target.value
+   var n = num.toString();
+  // this.setState({ startYear: event.target.value });
+  // console.log("start" + this.state.startYear)
+  this.setState({ startYear: n }, () => {
+  console.log(this.state.startYear, 'startYear');
+});
+
+ };
+ handleChange2 = event => {
+   this.setState({ [event.target.name]: event.target.value });
+   var num = event.target.value
+   var n = num.toString();
+   console.log(typeof n)
+   console.log(n)
+   this.setState({ endYear: n });
+   console.log("end" + this.state.endYear)
+ };
 
 updateSearch = event =>{
   this.setState({startInput:event.target.value })
@@ -119,13 +195,57 @@ updateSearch = event =>{
   handleMobileMenuOpen = event => {
     this.setState({ mobileMoreAnchorEl: event.currentTarget });
   };
+  //function to sort based off most recent
+  MostRecent = ()=> {
+      var array = []
+    //console.log(this.state.jsonData)
+    if(this.state.jsonData != ""){
+      var sortedJSON = []
+      for (var key in this.state.jsonData) {
+          array.push({key:key,date:this.state.jsonData[key].data[0].date_created});
+      }
+      array.sort(function(a,b){
+      return new Date(b.date) - new Date(a.date);
+      });
+      for (var item in array){
+          sortedJSON.push(this.state.jsonData[array[item].key])
+      }
+      this.setState({jsonData:sortedJSON})
+      }
+      else{
+      }
+  }
+//function to sort into Alphabetical Order
+  Alpha = ()=> {
+    //console.log(this.state.jsonData)
+    if(this.state.jsonData != ""){
+      var array = []
+      var sortedJSON = []
+      for (var key in this.state.jsonData) {
+          array.push({key:key,title:this.state.jsonData[key].data[0].title});
+          console.log()
+      }
+      array.sort(function(a,b){
+      if(a.title < b.title) { return -1; }
+      if(a.title > b.title) { return 1; }
+      return 0;
+      });
+      for (var item in array){
+          sortedJSON.push(this.state.jsonData[array[item].key])
+      }
+      this.setState({jsonData:sortedJSON})
+      }
+      else{
+      }
+  }
+
 
   handleMobileMenuClose = () => {
     this.setState({ mobileMoreAnchorEl: null });
   };
   search=()=> {
    alert("THIS FUNCTION IS BEING CALLED!");
-   var searchString = "https://images-api.nasa.gov/search?q="+this.state.startInput;
+   var searchString = "https://images-api.nasa.gov/search?q="+this.state.startInput+ "&media_type=image&year_start=" + this.state.startYear + "&year_end=" + this.state.endYear ;
    axios.get(searchString)
    .catch((error) =>{
      console.log("Try Another Search")
@@ -134,10 +254,13 @@ updateSearch = event =>{
    var data = res.data.collection.items;
    this.setState({jsonData:data})
    console.log("THIS RAN SUCCESSFULLY");
-   console.log(data);
+   console.log("json" +this.state.jsonData );
    }))
  }
 
+ handleChange = (event, value) => {
+   this.setState({ value });
+ };
   //seacrh functionyellow
 //  var input;
 
@@ -147,8 +270,11 @@ updateSearch = event =>{
     //var input;
     //document.write({input});
     //var input;
+    const dateoptions = [];
+      for (let i = 1920; i <= 2019; i++) {
+        dateoptions.push(<MenuItem value={i}>{i}</MenuItem>);
+      }
 
-    const t = "hi";
     const { anchorEl, mobileMoreAnchorEl } = this.state;
     const { classes } = this.props;
     const isMenuOpen = Boolean(anchorEl);
@@ -194,7 +320,6 @@ updateSearch = event =>{
         </MenuItem>
         <MenuItem onClick={this.handleProfileMenuOpen}>
           <IconButton color="inherit">
-            <HistoryIcon/>
           </IconButton>
           <p>History</p>
         </MenuItem>
@@ -210,7 +335,7 @@ updateSearch = event =>{
             </Typography>
             <div className={classes.search}>
               <div className={classes.searchIcon}>
-                <SearchIcon />
+
               </div>
               <InputBase
                 type = 'text'
@@ -224,8 +349,44 @@ updateSearch = event =>{
                 onChange={this.updateSearch.bind(this)}
               />
             </div>
-            <Button size="small" color="dnOXL9ARn8KJQfo" onClick={this.search}>
-            <SearchIcon/>
+
+            {/*this is date seacrh*/}
+            <form className={classes.root2} autoComplete="off">
+              <FormControl className={classes.formControl} >
+                <InputLabel ></InputLabel>
+                <Select
+                  value={this.state.name}
+                  onChange={this.handleChange1}
+                  input={<Input name= "name"/>}
+                >
+                  <MenuItem value="">
+                    <em>None</em>
+                  </MenuItem>
+                  {dateoptions}
+                </Select>
+                <FormHelperText>Start Date</FormHelperText>
+
+              </FormControl>
+
+              <FormControl className={classes.formControl}>
+                <InputLabel ></InputLabel>
+                <Select
+                  value={this.state.name2}
+                  onChange={this.handleChange2}
+                  input={<Input name="name2" />}
+                  autoWidth>
+                  <MenuItem value="">
+                    <em>None</em>
+                  </MenuItem>
+                  {dateoptions}
+                </Select>
+                <FormHelperText>End Date</FormHelperText>
+
+              </FormControl>
+
+            </form>
+            <Button size="small" color="secondary" htmlType="submit" onClick = {e => this.search(e)}>
+              <SearchIcon color= "blue"/>
             </Button>
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
@@ -238,6 +399,7 @@ updateSearch = event =>{
               <IconButton
                 color="inherit"
               >
+              <Historytab/>
                 <HistoryIcon/>
               </IconButton>
             </div>
@@ -248,6 +410,20 @@ updateSearch = event =>{
             </div>
           </Toolbar>
         </AppBar>
+        {/*THIS IS THE SEARCHOPTIONS*/}
+        <Paper className={classes.root}>
+          <Tabs
+            value={this.state.value}
+            onChange={this.handleChange}
+            indicatorColor="primary"
+            textColor="primary"
+            centered
+          >
+            <Tab label="Recent First" onClick={this.MostRecent} />
+            <Tab label="Alphabetical" onClick={this.Alpha} />
+            <Tab label="By center" onClick={this.Centerize}/>
+          </Tabs>
+        </Paper>
         <Album said ={this.state.startInput} jdata = {this.state.jsonData} />
         {renderMenu}
         {renderMobileMenu}
