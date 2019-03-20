@@ -6,6 +6,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
+import CardMedia from '@material-ui/core/CardMedia';
+
 
 function Transition(props) {
   return <Slide direction="up" {...props} />;
@@ -37,10 +39,26 @@ class Buttons extends React.Component {
           onClose={this.handleClose}
           aria-labelledby="alert-dialog-slide-title"
           aria-describedby="alert-dialog-slide-description"
+          aria-dateby="alert-dialog-slide-date"
+          aria-dateby="alert-dialog-slide-image"
+
         >
           <DialogTitle id="alert-dialog-slide-title">
-          {this.props.dataID !== undefined ? this.props.titleID : ""}          
+          {this.props.dataID !== undefined ? this.props.titleID : ""}
           </DialogTitle>
+
+          <DialogContent>
+            <DialogContentText id="alert-dialog-slide-date">
+              {this.props.dataID !== undefined ? this.props.dateID : ""}
+            </DialogContentText>
+          </DialogContent>
+          <DialogContent>
+          <DialogContentText id="alert-dialog-slide-image">
+        <img src={this.props.dataID !== undefined ? this.props.imageID : ""} height = "100%" width = "100%"/>
+
+          </DialogContentText>
+          </DialogContent>
+
           <DialogContent>
             <DialogContentText id="alert-dialog-slide-description">
               {this.props.dataID !== undefined ? this.props.dataID : ""}

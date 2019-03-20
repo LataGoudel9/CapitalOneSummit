@@ -4,7 +4,7 @@ import Typography from '@material-ui/core/Typography';
 class Footer extends Component {
   render() {
     return (
-      <div className="App">
+      <div className="App" backgroundcolor= "secondary">
       <Typography variant="h6" align="center" gutterBottom>
           Footer
         </Typography>

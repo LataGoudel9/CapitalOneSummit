@@ -46,12 +46,9 @@ class TemporaryDrawer extends React.Component {
         </List>
       </div>
     );
-
-
-
     return (
       <div>
-        <Button onClick={this.toggleDrawer('right', true)}> <HistoryIcon color="inherit"/>
+        <Button onClick={this.toggleDrawer('right', true)} color="inherit"> <HistoryIcon />
 </Button>
         <Drawer anchor="right" open={this.state.right} onClose={this.toggleDrawer('right', false)}>
           <div

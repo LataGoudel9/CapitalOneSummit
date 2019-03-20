@@ -18,7 +18,6 @@ import MoreIcon from '@material-ui/icons/MoreVert';
 import Button from '@material-ui/core/Button';
 import Album from './Album';
 import Tempdrawer from './Tempdrawer';
-import colors from '@material-ui/core/colors';
 import Historytab from './Historytab';
 
 import Paper from '@material-ui/core/Paper';
@@ -28,7 +27,6 @@ import Tab from '@material-ui/core/Tab';
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 
-import Dates from './Dates'
 import Input from '@material-ui/core/Input';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
 import FilledInput from '@material-ui/core/FilledInput';
@@ -150,25 +148,27 @@ class Header extends React.Component {
    value: 0,
    jsonData: [],
    startYear : "1920",
-   endYear: "2019`"
+   endYear: "2019",
+   imagepixHeight: "110%",
+   imagepixWidth: "105%",
+   active: true,
 
  };
  }
  state = {
 
  };
+ //buton for selecting the start year
  handleChange1 = event => {
    this.setState({ [event.target.name]: event.target.value });
-   //console.log(event.target.value)
    var num = event.target.value
    var n = num.toString();
-  // this.setState({ startYear: event.target.value });
-  // console.log("start" + this.state.startYear)
   this.setState({ startYear: n }, () => {
   console.log(this.state.startYear, 'startYear');
 });
 
  };
+ //button for selecting endyear
  handleChange2 = event => {
    this.setState({ [event.target.name]: event.target.value });
    var num = event.target.value
@@ -244,7 +244,6 @@ updateSearch = event =>{
     this.setState({ mobileMoreAnchorEl: null });
   };
   search=()=> {
-   alert("THIS FUNCTION IS BEING CALLED!");
    var searchString = "https://images-api.nasa.gov/search?q="+this.state.startInput+ "&media_type=image&year_start=" + this.state.startYear + "&year_end=" + this.state.endYear ;
    axios.get(searchString)
    .catch((error) =>{
@@ -253,8 +252,9 @@ updateSearch = event =>{
    .then((res => {
    var data = res.data.collection.items;
    this.setState({jsonData:data})
-   console.log("THIS RAN SUCCESSFULLY");
-   console.log("json" +this.state.jsonData );
+   this.setState({imagepixHeight: "0px"})
+   this.setState({imagepixWidth: "0px"})
+   this.setState({active : false});
    }))
  }
 
@@ -266,10 +266,7 @@ updateSearch = event =>{
 
 
   render() {
-    //console.log(this.state.startInput)
-    //var input;
-    //document.write({input});
-    //var input;
+
     const dateoptions = [];
       for (let i = 1920; i <= 2019; i++) {
         dateoptions.push(<MenuItem value={i}>{i}</MenuItem>);
@@ -351,9 +348,9 @@ updateSearch = event =>{
             </div>
 
             {/*this is date seacrh*/}
-            <form className={classes.root2} autoComplete="off">
+            <form className={classes.root2} autoComplete="off"
+ >
               <FormControl className={classes.formControl} >
-                <InputLabel ></InputLabel>
                 <Select
                   value={this.state.name}
                   onChange={this.handleChange1}
@@ -364,12 +361,11 @@ updateSearch = event =>{
                   </MenuItem>
                   {dateoptions}
                 </Select>
-                <FormHelperText>Start Date</FormHelperText>
+                <FormHelperText  >Start Date</FormHelperText>
 
               </FormControl>
 
               <FormControl className={classes.formControl}>
-                <InputLabel ></InputLabel>
                 <Select
                   value={this.state.name2}
                   onChange={this.handleChange2}
@@ -380,12 +376,12 @@ updateSearch = event =>{
                   </MenuItem>
                   {dateoptions}
                 </Select>
-                <FormHelperText>End Date</FormHelperText>
+                <FormHelperText >End Date</FormHelperText>
 
               </FormControl>
 
             </form>
-            <Button size="small" color="secondary" htmlType="submit" onClick = {e => this.search(e)}>
+            <Button size="small" color="inherit" htmlType="submit" onClick = {e => this.search(e)}>
               <SearchIcon color= "blue"/>
             </Button>
             <div className={classes.grow} />
@@ -396,12 +392,7 @@ updateSearch = event =>{
                   <NotificationsIcon />
                 </Badge>
               </IconButton>
-              <IconButton
-                color="inherit"
-              >
               <Historytab/>
-                <HistoryIcon/>
-              </IconButton>
             </div>
             <div className={classes.sectionMobile}>
               <IconButton color="inherit">
@@ -424,7 +415,7 @@ updateSearch = event =>{
             <Tab label="By center" onClick={this.Centerize}/>
           </Tabs>
         </Paper>
-        <Album said ={this.state.startInput} jdata = {this.state.jsonData} />
+        <Album said ={this.state.startInput} jdata = {this.state.jsonData} height1= {this.state.imagepixHeight} width1= {this.state.imagepixWidth}  dotsID= {this.state.active}/>
         {renderMenu}
         {renderMobileMenu}
       </div>
