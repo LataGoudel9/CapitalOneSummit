@@ -6,7 +6,9 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
-import CardMedia from '@material-ui/core/CardMedia';
+
+//this file is for the button which one can hit "view" and extra metadata appears for each picture
+//called by the album file
 
 
 function Transition(props) {

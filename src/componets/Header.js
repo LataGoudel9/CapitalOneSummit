@@ -34,7 +34,10 @@ import InputLabel from '@material-ui/core/InputLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-
+import Firebase from './Firebase'
+//firebase calls
+var database = Firebase.database();
+const itemsRef = Firebase.database().ref('searches');
 
 const styles = theme => ({
   root2: {
@@ -139,6 +142,7 @@ const styles = theme => ({
 });
 class Header extends React.Component {
 
+//states and thier default values
   constructor(props){
    super(props);
    this.state = {
@@ -152,37 +156,38 @@ class Header extends React.Component {
    imagepixHeight: "110%",
    imagepixWidth: "105%",
    active: true,
+   searches: null,
+   histArr: [],
 
  };
  }
  state = {
 
  };
+
  //buton for selecting the start year
- handleChange1 = event => {
+ toChangeStartYear = event => {
    this.setState({ [event.target.name]: event.target.value });
    var num = event.target.value
    var n = num.toString();
   this.setState({ startYear: n }, () => {
-  console.log(this.state.startYear, 'startYear');
 });
 
  };
  //button for selecting endyear
- handleChange2 = event => {
+ toChangeEndYear = event => {
    this.setState({ [event.target.name]: event.target.value });
    var num = event.target.value
    var n = num.toString();
-   console.log(typeof n)
-   console.log(n)
    this.setState({ endYear: n });
-   console.log("end" + this.state.endYear)
  };
 
+//function to update seacrh
 updateSearch = event =>{
   this.setState({startInput:event.target.value })
 }
 
+//functions for utility and  web design
   handleProfileMenuOpen = event => {
     this.setState({ anchorEl: event.currentTarget });
   };
@@ -195,6 +200,11 @@ updateSearch = event =>{
   handleMobileMenuOpen = event => {
     this.setState({ mobileMoreAnchorEl: event.currentTarget });
   };
+
+  handleMobileMenuClose = () => {
+    this.setState({ mobileMoreAnchorEl: null });
+  };
+
   //function to sort based off most recent
   MostRecent = ()=> {
       var array = []
@@ -223,7 +233,6 @@ updateSearch = event =>{
       var sortedJSON = []
       for (var key in this.state.jsonData) {
           array.push({key:key,title:this.state.jsonData[key].data[0].title});
-          console.log()
       }
       array.sort(function(a,b){
       if(a.title < b.title) { return -1; }
@@ -239,10 +248,7 @@ updateSearch = event =>{
       }
   }
 
-
-  handleMobileMenuClose = () => {
-    this.setState({ mobileMoreAnchorEl: null });
-  };
+//main search function wuth default start date being 1920 and end date being 2019
   search=()=> {
    var searchString = "https://images-api.nasa.gov/search?q="+this.state.startInput+ "&media_type=image&year_start=" + this.state.startYear + "&year_end=" + this.state.endYear ;
    axios.get(searchString)
@@ -255,29 +261,49 @@ updateSearch = event =>{
    this.setState({imagepixHeight: "0px"})
    this.setState({imagepixWidth: "0px"})
    this.setState({active : false});
+   //this is a search addition to my database for history
+   var data = {
+     search: this.state.startInput
+   }
+   itemsRef.push(data);
    }))
  }
 
  handleChange = (event, value) => {
    this.setState({ value });
  };
-  //seacrh functionyellow
-//  var input;
+//function which sets an array to the values in the database searches for my historytab
+componentDidMount() {
+  itemsRef.on('value', (snapshot) => {
+    let items = snapshot.val();
+    console.log(items)
+    let newState = [];
+    for (let item in items) {
+      console.log(items[item])
+      newState.push(
+        items[item].search,
+        );
+    }
+    this.setState({
+      histArr: newState
+    });
+    console.log(this.state.histArr)
+
+  });
+}
 
 
-  render() {
-
+  render(){
     const dateoptions = [];
       for (let i = 1920; i <= 2019; i++) {
         dateoptions.push(<MenuItem value={i}>{i}</MenuItem>);
       }
-
     const { anchorEl, mobileMoreAnchorEl } = this.state;
     const { classes } = this.props;
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-
     const renderMenu = (
+      //these are for design and layout
       <Menu
         anchorEl={anchorEl}
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
@@ -289,7 +315,6 @@ updateSearch = event =>{
         <MenuItem onClick={this.handleMenuClose}>My account</MenuItem>
       </Menu>
     );
-
     const renderMobileMenu = (
       <Menu
         anchorEl={mobileMoreAnchorEl}
@@ -353,7 +378,7 @@ updateSearch = event =>{
               <FormControl className={classes.formControl} >
                 <Select
                   value={this.state.name}
-                  onChange={this.handleChange1}
+                  onChange={this.toChangeStartYear}
                   input={<Input name= "name"/>}
                 >
                   <MenuItem value="">
@@ -362,13 +387,11 @@ updateSearch = event =>{
                   {dateoptions}
                 </Select>
                 <FormHelperText  >Start Date</FormHelperText>
-
               </FormControl>
-
               <FormControl className={classes.formControl}>
                 <Select
                   value={this.state.name2}
-                  onChange={this.handleChange2}
+                  onChange={this.toChangeEndYear}
                   input={<Input name="name2" />}
                   autoWidth>
                   <MenuItem value="">
@@ -377,9 +400,7 @@ updateSearch = event =>{
                   {dateoptions}
                 </Select>
                 <FormHelperText >End Date</FormHelperText>
-
               </FormControl>
-
             </form>
             <Button size="small" color="inherit" htmlType="submit" onClick = {e => this.search(e)}>
               <SearchIcon color= "blue"/>
@@ -392,7 +413,7 @@ updateSearch = event =>{
                   <NotificationsIcon />
                 </Badge>
               </IconButton>
-              <Historytab/>
+              <Historytab histID = {this.state.histArr}/>
             </div>
             <div className={classes.sectionMobile}>
               <IconButton color="inherit">
@@ -412,7 +433,6 @@ updateSearch = event =>{
           >
             <Tab label="Recent First" onClick={this.MostRecent} />
             <Tab label="Alphabetical" onClick={this.Alpha} />
-            <Tab label="By center" onClick={this.Centerize}/>
           </Tabs>
         </Paper>
         <Album said ={this.state.startInput} jdata = {this.state.jsonData} height1= {this.state.imagepixHeight} width1= {this.state.imagepixWidth}  dotsID= {this.state.active}/>

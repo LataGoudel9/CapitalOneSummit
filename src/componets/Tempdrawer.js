@@ -14,7 +14,8 @@ import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import Buttons from './Buttons';
 import IconButton from '@material-ui/core/IconButton';
-
+import firebase from "firebase";
+//this componenet was for the favorites but i never got to finish
 
 const styles = {
   list: {
@@ -24,6 +25,7 @@ const styles = {
     width: 'auto',
   },
 };
+//placeholder cards 
 const cards = [1, 2, 3, 4,5,6];
 
 class TemporaryDrawer extends React.Component {
@@ -42,9 +44,8 @@ class TemporaryDrawer extends React.Component {
 
   render() {
     const { classes } = this.props;
-
-
-
+    console.log("imageID"+ this.props.jsonID)
+    var jdata = this.props.jsonID
     const fullList = (
       <div className={classNames(classes.layout, classes.cardGrid)}>
         {/* End hero unit */}
@@ -59,7 +60,7 @@ class TemporaryDrawer extends React.Component {
                 />
                 <CardContent className={classes.cardContent}>
                   <Typography gutterBottom variant="h5" component="h2">
-                    Heading
+
                   </Typography>
                   <Typography>
                     This is a media card. You can use this section to describe the content.
@@ -89,10 +90,7 @@ class TemporaryDrawer extends React.Component {
           onClose={this.toggleDrawer('bottom', false)}
         >
           <div
-            tabIndex={0}
-            role="button"
-            onClick={this.toggleDrawer('bottom', false)}
-            onKeyDown={this.toggleDrawer('bottom', false)}
+
           >
             {fullList}
           </div>

@@ -1,13 +1,9 @@
 import React, { Component } from 'react';
 import Header from './componets/Header';
 import Footer from './componets/Footer';
-
-//header
-
-
-
+import firebase from 'firebase';
 import './App.css';
-
+//main js file which runs app 
 class App extends Component {
   render() {
     return (

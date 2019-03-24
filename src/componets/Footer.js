@@ -6,10 +6,10 @@ class Footer extends Component {
     return (
       <div className="App" backgroundcolor= "secondary">
       <Typography variant="h6" align="center" gutterBottom>
-          Footer
+          © 2019 NASA
         </Typography>
         <Typography variant="subtitle1" align="center" color="textSecondary" component="p">
-          Something here to give the footer a purpose!
+          Designed using Matierial UI
         </Typography>
 
       </div>
