@@ -68,10 +68,7 @@ class Buttons extends React.Component {
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleClose} color="primary">
-              Disagree
-            </Button>
-            <Button onClick={this.handleClose} color="primary">
-              Agree
+              Ok
             </Button>
           </DialogActions>
         </Dialog>
