@@ -153,7 +153,7 @@ class Header extends React.Component {
    jsonData: [],
    startYear : "1920",
    endYear: "2019",
-   imagepixHeight: "110%",
+   imagepixHeight: "90%",
    imagepixWidth: "105%",
    active: true,
    searches: null,

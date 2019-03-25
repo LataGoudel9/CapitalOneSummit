@@ -36,7 +36,7 @@ const styles = theme => ({
 
   heroUnit: {
     position: 'relative',
-  backgroundImage: "url(" + "https://upload.wikimedia.org/wikipedia/commons/1/1e/A_blank_black_picture.jpg" + ")",
+    backgroundColor: "black",
   backgroundSize :"100% 800px"
   },
   //the style for the blurb at front
